@@ -50,7 +50,6 @@ Go to the `bin` folder (`$ cd bin`) and run test example:
 - For features smaller than 1mm it's a good idea to turn your vector art to straight lines not shorter than 0.1mm instead of curves
 - There's no movement optimization - arrange your layers according to how you want the draw progression to be. Bottom layers come first, top ones come last.
 - You can use your SD card with the generated gcode copied and renamed to `autoprint.gcode` - or use OctoPrint with the "Grbl support" plugin installed.
-- [Fixed - motion.js] - If you use circles, make sure to expand the shape before converting. Currently not supporting G3 and G2 arcs on the Trinus - fix needs more testing
 
 ### To Dos
 - combine commands into one - svgTrinusifier [options] <file ...>
