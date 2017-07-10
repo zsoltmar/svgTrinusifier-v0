@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+var fs = require('fs')
+  , program = require('commander')
+  , GCanvas = require('gcanvas')
+  , canvg = require('canvg');
+
+program
+  .version(require('../package.json').version)
+  .usage('[options] <file ...>')
+  .option('-z, --zheight <number>', 'Z height (focused laser + material height in mm) ex.103.2', eval)
+  
+program.parse(process.argv);
+
+var gc = new GCanvas();
+var z=100;
+
+if(program.zheight) z = program.zheight;
+
+var startScript = "M629 C0\nG28\n"+"G0 Z"+z;
+var endScript = "G28 X Y\nG0 Y125";
+
+function run(file) {
+  console.log(startScript);
+  var svg = ''+fs.readFileSync(file);
+  canvg(gc.canvas, svg,{scaleWidth:120, scaleHeight:-125, offsetX:0, offsetY:125});
+  console.log(endScript);
+}
+
+if(program.args.length === 0) {
+  program.outputHelp();
+  process.exit(0);
+}
+
+program.args.forEach(function(file) {
+  run(file);
+  process.exit(0);
+});
+
+process.on("SIGPIPE", process.exit);

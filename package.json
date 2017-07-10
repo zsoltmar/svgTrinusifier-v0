@@ -1,0 +1,27 @@
+{
+  "name": "gcodeTrinusifier",
+  "version": "0.0.1",
+  "description": "Convert SVG to Gcode that drives the Kodama Trinus laser head",
+  "bin": {
+    "gcodeTrinusifier": "./bin/gcodeTrinusifier"
+  },
+  "dependencies": {
+    "canvg": "0.0.6",
+    "commander": "^2.5.0",
+    "gcanvas": "0.0.*",
+    "write": "^0.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "zsoltmar/svgTrinusifier"
+  },
+  "keywords": [
+    "svg",
+    "gcode",
+    "laser",
+    "kodama",
+    "trinus"
+  ],
+  "author": "Zsolt van den Mar",
+  "license": "MIT"
+}

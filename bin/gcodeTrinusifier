@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+
+var stdin = process.openStdin()
+  , program = require('commander');
+
+program
+  .option('-m, --move <number>', 'Movement speed (mm/minute) default:5400', eval)
+  .option('-l, --laser <number>', 'Laser speed (mm/minute) default:300', eval)
+  
+program.parse(process.argv);
+
+var moveSpeed = 5400;
+var laserSpeed = 300;
+var data = "";
+
+if(program.move) moveSpeed = program.move;
+if(program.laser) laserSpeed = program.laser;
+
+//Read input Gcode in chunks
+stdin.on('data', function(chunk) {
+  data += chunk;
+});
+
+//Process Gcode
+stdin.on('end', function() {
+  //console.log("DATA:\n" + data + "\nEND DATA");
+  run(data);
+});
+
+function run(data){
+  var laserExtrusion = 0;
+  var laserInc = 0.01;
+
+  var lines = data.split('\n');
+  var line = "";
+  var totalLines = lines.length;
+  var firstG0 = true;
+
+  for(var i = 0; i < totalLines; i++){
+    line = lines[i];
+    //var percent = (100*(i+1))/totalLines;//use for progressbar?
+    //stop with error if G3/G2 is found
+    /*if (line.indexOf("G3")!=-1 || line.indexOf("G2")!=-1) {
+      console.log("Error - G3/G2 found");
+      process.exit(0);
+    }*/
+    //G0
+    if (line.indexOf("G0")==0){
+      // Only if X and Y values are present
+      if(line.indexOf(" X")!=-1 && line.indexOf(" Y")!=-1) {
+        //Only if not already E - repeat last extrusion value (laser off)
+        if(line.indexOf(" E")==-1){
+          if(!firstG0){ //avoid E for the first G0 X Y move to make sure the laser is off
+            line += " E" + laserExtrusion.toFixed(3);
+          } else {
+            firstG0 = false;
+          }
+        }
+      }
+      // Add movement speed to all G0s, unless already defined or has Z (should stay default)  
+      if(line.indexOf(" F")==-1 && line.indexOf(" Z")==-1) {
+        line += " F" + moveSpeed;
+      }
+    }
+    //G1
+    if (line.indexOf("G1")==0) {
+      // Remove Z values from G1s
+      if(line.indexOf(" Z")!=-1) {
+        var findZee = /\b\sZ.?[^\s]+/;
+        line = line.replace(findZee,"");
+      };
+      // Add incremental laser extrusion (laser on)
+      if(laserExtrusion==0) { laserExtrusion = laserInc } else { laserExtrusion += laserInc }
+      // Only if X or Y or Z are present
+      if(line.indexOf(" Z")!=-1 || line.indexOf(" X")!=-1 || line.indexOf(" Y")!=-1) {
+        // Only if not already E
+        if(line.indexOf(" E")==-1){
+          line += " E" + laserExtrusion.toFixed(3);
+        }
+      }
+      // Add feed speed
+      if(line.indexOf(" F")==-1) {
+        line += " F" + laserSpeed;
+      }
+    }
+    //Write updated line, ignore empty lines
+    if(line!="") console.log(line);
+  }
+}
+
+process.on("SIGPIPE", process.exit);
