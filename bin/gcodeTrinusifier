@@ -23,7 +23,6 @@ stdin.on('data', function(chunk) {
 
 //Process Gcode
 stdin.on('end', function() {
-  //console.log("DATA:\n" + data + "\nEND DATA");
   run(data);
 });
 
@@ -39,11 +38,6 @@ function run(data){
   for(var i = 0; i < totalLines; i++){
     line = lines[i];
     //var percent = (100*(i+1))/totalLines;//use for progressbar?
-    //stop with error if G3/G2 is found
-    /*if (line.indexOf("G3")!=-1 || line.indexOf("G2")!=-1) {
-      console.log("Error - G3/G2 found");
-      process.exit(0);
-    }*/
     //G0
     if (line.indexOf("G0")==0){
       // Only if X and Y values are present
