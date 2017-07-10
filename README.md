@@ -9,11 +9,16 @@ Any comments and updates to this project are welcome! This is my first node.js p
 ### Installation, Steps
 You'll need [nodejs](http://nodejs.org) installed.
 
+Clone this repository to a local folder - `git clone https://github.com/zsoltmar/svgTrinusifier.git`
+
 Run `npm install` to install dependencies.
 
 Copy (and overwrite) `bin/motion.js` to `node_modules/gcanvas/lib/motion.js`
 
-Go to the `bin` folder (`$ cd bin`) and run script.
+Go to the `bin` folder (`$ cd bin`) and run script:
+*Script structure:* `node svgGcoder ../folder/input.svg -z 103.2 | node gcodeTrinusifier > ../folder/output.gcode -m 5400 -l 300`
+*Test example:* `node svgGcoder ../test/arcs.svg -z 103.2 | node gcodeTrinusifier > ../test/arcs.gcode -m 5400 -l 300`
+
 
 ### Usage
 ```
@@ -32,10 +37,6 @@ Go to the `bin` folder (`$ cd bin`) and run script.
     -l, --laser <number>		Laser speed (mm/minute) default:300
 
 ```
-
-Sample: `node svgGcoder ../folder/input.svg -z 103.2 | node gcodeTrinusifier > ../folder/output.gcode -m 5400 -l 300`
-
-Test example: `node svgGcoder ../test/arcs.svg -z 103.2 | node gcodeTrinusifier > ../test/arcs.gcode -m 5400 -l 300`
 
 ### Notes & Tips
 - Run test example (see above) - you should get a gcode file in the test directory. You can comapre it to the one in the /gen folder. The outer circle is to preview the default interpolation, second circle is a smoother one with added points. The spirals are an example of curved lines that are interpolated with more inbetween points.
