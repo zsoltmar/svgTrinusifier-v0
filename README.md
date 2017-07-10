@@ -16,7 +16,9 @@ Run `npm install` to install dependencies.
 Copy (and overwrite) `bin/motion.js` to `node_modules/gcanvas/lib/motion.js`
 
 Go to the `bin` folder (`$ cd bin`) and run script:
+
 *Script structure:* `node svgGcoder ../folder/input.svg -z 103.2 | node gcodeTrinusifier > ../folder/output.gcode -m 5400 -l 300`
+
 *Test example:* `node svgGcoder ../test/arcs.svg -z 103.2 | node gcodeTrinusifier > ../test/arcs.gcode -m 5400 -l 300`
 
 
